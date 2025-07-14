@@ -59,7 +59,7 @@ To enable ADT Pulse, add the following integration like any other integration in
 3. Login to your account.
 4. If the device isn't trusted, it will prompt you for a code, afterwards you will be asked if you want to trust the device. Give it a name and click Save and Continue.
 
-![ADT Save Device](https://github.com/rsnodgrass/hass-adtpulse/blob/master/docs/adt_save_device.jpg?raw=true)
+![ADT Save Device](https://github.com/homeassistant-projects/hass-adtpulse/blob/master/docs/adt_save_device.jpg?raw=true)
 
 5. Get the fingerprint. There are 2 ways to do this:
 
@@ -67,7 +67,7 @@ To enable ADT Pulse, add the following integration like any other integration in
 
    - Open up the developer tools and look for the page called "signin.jsp". Under the form data, look for "fingerprint". Copy that value and use it for the device_id value in your configuration.yaml file. If for some reason you didn't record, just re-login to your account again with the same browser.
 
-![ADT Form Data](https://github.com/rsnodgrass/hass-adtpulse/blob/master/docs/adt_form_data.jpg?raw=true)
+![ADT Form Data](https://github.com/homeassistant-projects/hass-adtpulse/blob/master/docs/adt_form_data.jpg?raw=true)
 
 
 ## Options
@@ -95,7 +95,7 @@ The integration provides the following devices:
 
 #### Sensors
 
-![Lovelace Example](https://github.com/rsnodgrass/hass-adtpulse/blob/master/docs/adt_motion_status.png?raw=true)
+![Lovelace Example](https://github.com/homeassistant-projects/hass-adtpulse/blob/master/docs/adt_motion_status.png?raw=true)
 
 Current status of motion detectors:
 
@@ -114,7 +114,7 @@ title: Motion Sensors
 show_header_toggle: false
 ```
 
-![Lovelace Example](https://github.com/rsnodgrass/hass-adtpulse/blob/master/docs/adt_motion_history.png?raw=true)
+![Lovelace Example](https://github.com/homeassistant-projects/hass-adtpulse/blob/master/docs/adt_motion_history.png?raw=true)
 
 Motion detected history:
 
@@ -153,7 +153,7 @@ show_header_toggle: false
 
 Using [Home Assistant's built-in Alarm Panel Card](https://www.home-assistant.io/lovelace/alarm-panel/):
 
-![Lovelace Example](https://github.com/rsnodgrass/hass-adtpulse/blob/master/docs/adt_alarm_panel.png?raw=true)
+![Lovelace Example](https://github.com/homeassistant-projects/hass-adtpulse/blob/master/docs/adt_alarm_panel.png?raw=true)
 
 ```yaml
 type: alarm-panel
@@ -190,7 +190,7 @@ automation:
 ## See Also
 
 * [ADT Pulse Home Assistant support community](https://community.home-assistant.io/t/adt-pulse-integration/10160/)
-* [pyadtpulse](https://github.com/rsnodgrass/pyadtpulse)
+* [pyadtpulse](https://github.com/homeassistant-projects/pyadtpulse)
 * [adt-pulse-mqtt](https://github.com/haruny/adt-pulse-mqtt)
 * [ADT Pulse management portal](https://portal.adtpulse.com/)
 * https://github.com/mrjackyliang/homebridge-adt-pulse
@@ -214,4 +214,4 @@ No plans to implement support for the following (however, feel free to contribut
 # Credits
 
 * Huge thanks to [Robert Lippmann / rlippmann@](https://github.com/rlippmann). During 2023-2024 Richard made major contributions to pyadtpulse to support async behavior, including switching Home Assistant integration to fully use the async mechanism.
-* [Ryan Snodgrass](https://github.com/rsnodgrass) for originally contributing a skeleton and initial working implementation to have a Home Assistant integration.
+* [Ryan Snodgrass](https://github.com/homeassistant-projects) for originally contributing a skeleton and initial working implementation to have a Home Assistant integration.

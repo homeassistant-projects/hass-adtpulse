@@ -1,13 +1,13 @@
 {
     "domain": "adtpulse",
     "name": "ADT Pulse",
-    "codeowners": ["@rsnodgrass", "@rlippmann"],
+    "codeowners": ["@homeassistant-projects", "@rlippmann"],
     "config_flow": true,
     "dependencies": [],
-    "documentation": "https://github.com/rsnodgrass/hass-adtpulse/",
+    "documentation": "https://github.com/homeassistant-projects/hass-adtpulse/",
     "integration_type": "hub",
     "iot_class": "cloud_push",
-    "issue_tracker": "https://github.com/rsnodgrass/hass-adtpulse/issues",
+    "issue_tracker": "https://github.com/homeassistant-projects/hass-adtpulse/issues",
     "requirements": [
         "pyadtpulse>=1.2.11"
     ],

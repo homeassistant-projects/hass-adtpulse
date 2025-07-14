@@ -4,8 +4,8 @@
     "codeowners": ["@rsnodgrass", "@rlippmann"],
     "config_flow": true,
     "dependencies": [],
-    "integration_type": "hub",
     "documentation": "https://github.com/rsnodgrass/hass-adtpulse/",
+    "integration_type": "hub",
     "iot_class": "cloud_push",
     "issue_tracker": "https://github.com/rsnodgrass/hass-adtpulse/issues",
     "requirements": [

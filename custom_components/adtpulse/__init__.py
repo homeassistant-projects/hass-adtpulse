@@ -1,6 +1,6 @@
 """ADT Pulse for Home Assistant.
 
-See https://github.com/rsnodgrass/hass-adtpulse
+See https://github.com/homeassistant-projects/hass-adtpulse
 """
 
 from __future__ import annotations

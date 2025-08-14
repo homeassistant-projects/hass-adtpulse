@@ -3,18 +3,19 @@
 Home Assistant integration for [ADT Pulse](https://portal.adtpulse.com/) security systems for both alarming/disarming, as well as sensor status (motion, door, window, etc).
 
 ![beta_badge](https://img.shields.io/badge/maturity-Beta-yellow.png)
-![release_badge](https://img.shields.io/github/v/release/rsnodgrass/hass-adtpulse.svg)
-![release_date](https://img.shields.io/github/release-date/rsnodgrass/hass-adtpulse.svg)
+![release_badge](https://img.shields.io/github/v/release/homeassistant-projects/hass-adtpulse.svg)
+![release_date](https://img.shields.io/github/release-date/homeassistant-projects/hass-adtpulse.svg)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/custom-components/hacs)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
+Support the original author (rsnodgrass)
 [![Buy Me A Coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://buymeacoffee.com/DYks67r)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=WREP29UDAMB6G)
 
 
-## WORKS BUT NO LONGER SUPPORTED OR MAINTAINED AS OF 2024
+## Development
 
-The developers are just volunteers from the community and do not provide any support, so it is best to ask the entire community for help or questions.
+The maintainers are volunteers from the community and provide best effort support, so it is best to get involved and contribute!
 
 Please feel free to commit changes and fixes. Pull requests are encouraged.
 
@@ -33,22 +34,19 @@ This platform supports the following services:
 As of August 29, 2021 ADT Pulse has had 2FA added and is currently required for all ADT Pulse access. This breaks any integration that relies on logging in with a user and password.  Because of this, a separate username/password should be created exclusively for Home Assistant login.  A browser fingerprint is used by Pulse to indicate when a user "saves" the browser via 2FA.  Details on obtaining this fingerprint is given below.
 
 
-
 ## Installation
 
 If you have trouble with installation and configuration, visit the [ADT Pulse Home Assistant community discussion](https://community.home-assistant.io/t/adt-pulse-integration/10160/).
 
 ### Step 1: Install Custom Components
 
-Make sure that [Home Assistant Community Store (HACS)](https://github.com/custom-components/hacs) is installed and then add the "Integration" repository: *rsnodgrass/hass-adtpulse*.
+Make sure that [Home Assistant Community Store (HACS)](https://github.com/custom-components/hacs) is installed and then add the "Integration" repository: *homeassistant-projects/hass-adtpulse*.
 
 Note: Manual installation by direct download and copying is not supported, if you have issues, please first try installing this integration with HACS.
 
 ### Step 2: Configure ADT Pulse
 
-**NOTE: As of April 2023, the ADT Pulse integration now can be configured via a config flow!**
-
-To enable ADT Pulse, add the following integration like any other integration in HA. Input the necessary details including username, password, fingerprint (please see the below step "Step to Get Your Trusted Device") and select the URL and frequency for updates.
+To enable ADT Pulse, add `ADT Pulse` from HA Settings -> Integrations -> Add Integration. Input the necessary details including username, password, fingerprint (please see the below step "Step to Get Your Trusted Device") and select the URL and frequency for updates.
 
 #### Step to Get Your Trusted Device
 
@@ -63,7 +61,7 @@ To enable ADT Pulse, add the following integration like any other integration in
 
 5. Get the fingerprint. There are 2 ways to do this:
 
-   - Using the same browser you used to authenticate with ADT Pulse, navigate to [this page](https://rawcdn.githack.com/rlippmann/pyadtpulse/b3a0e7097e22446623d170f0a971726fbedb6a2d/doc/browser_fingerprint.html) It will show you the browser fingerprint and allow you to copy it to your clipboard. If this doesn't work, try the next step.
+   - Using the same browser you used to authenticate with ADT Pulse, navigate to [this page](https://rawcdn.githack.com/homeassistant-projects/pyadtpulse/5fe719d2bea2b6e68aec0588c4d92f363223424d/doc/browser_fingerprint.html) It will show you the browser fingerprint and allow you to copy it to your clipboard. If this doesn't work, try the next step.
 
    - Open up the developer tools and look for the page called "signin.jsp". Under the form data, look for "fingerprint". Copy that value and use it for the device_id value in your configuration.yaml file. If for some reason you didn't record, just re-login to your account again with the same browser.
 
@@ -201,17 +199,16 @@ automation:
 
 ## Support
 
-This integration was developed to cover use cases for my home integration, which I wanted to contribute to the community. Additional features beyond what has already been provided are the responsibility of the community to implement (unless trivial to add).
+Support is currently best effort. Maintainers may or may not have access to ADTPulse directly and may need assistance from community members to troubleshoot issues or develop new solutions.m
 
 ### Not Supported
 
 No plans to implement support for the following (however, feel free to contribute):
 
-~~* Home Assistant config flow (would be nice to add)~~
  * ADT Pulse cameras, lighting and dimmers
 
 
 # Credits
-
+* Current Maintainer(s): [Elliot Worth / EVWorth@](https://github.com/EVWorth)
 * Huge thanks to [Robert Lippmann / rlippmann@](https://github.com/rlippmann). During 2023-2024 Richard made major contributions to pyadtpulse to support async behavior, including switching Home Assistant integration to fully use the async mechanism.
 * [Ryan Snodgrass](https://github.com/homeassistant-projects) for originally contributing a skeleton and initial working implementation to have a Home Assistant integration.

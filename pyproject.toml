@@ -1,6 +1,6 @@
 [project]
 name = "hass-adtpulse"
-version = "0.4.6"
+version = "0.5.0"
 description = "Home Assistant integration for ADT Pulse"
 readme = "README.md"
 requires-python = "==3.13.2"

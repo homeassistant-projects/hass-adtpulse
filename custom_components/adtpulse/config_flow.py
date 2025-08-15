@@ -10,10 +10,10 @@ import voluptuous as vol
 from homeassistant.config_entries import (
     CONN_CLASS_CLOUD_PUSH,
     ConfigEntry,
-    ConfigEntryNotReady,
     ConfigFlow,
     OptionsFlowWithConfigEntry,
 )
+from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.const import CONF_PASSWORD, CONF_SCAN_INTERVAL, CONF_USERNAME
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult

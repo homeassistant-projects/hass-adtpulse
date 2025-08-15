@@ -139,13 +139,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     coordinator = ADTPulseDataUpdateCoordinator(hass, service)
     hass.data.setdefault(ADTPULSE_DOMAIN, {})
     hass.data[ADTPULSE_DOMAIN][entry.entry_id] = coordinator
-    setup_tasks = [
-        hass.async_create_task(
-            hass.config_entries.async_forward_entry_setup(entry, platform)
-        )
-        for platform in SUPPORTED_PLATFORMS
-    ]
-    await gather(*setup_tasks)
+    await hass.config_entries.async_forward_entry_setups(entry, SUPPORTED_PLATFORMS)
     # entities already have their data, no need to call async_refresh()
     entry.async_on_unload(entry.add_update_listener(options_listener))
     await coordinator.start()

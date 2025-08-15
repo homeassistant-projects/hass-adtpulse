@@ -11,23 +11,17 @@ from homeassistant.components.alarm_control_panel.const import (
     AlarmControlPanelEntityFeature,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (
-    STATE_ALARM_ARMED_AWAY,
-    STATE_ALARM_ARMED_HOME,
-    STATE_ALARM_ARMING,
-    STATE_ALARM_DISARMED,
-    STATE_ALARM_DISARMING,
-    STATE_ALARM_ARMED_NIGHT,
-    STATE_UNAVAILABLE,
-)
+from homeassistant.components.alarm_control_panel.const import AlarmControlPanelState
+
+from homeassistant.const import STATE_UNAVAILABLE
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import HomeAssistantError
-from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import (
     AddEntitiesCallback,
     async_get_current_platform,
 )
-from homeassistant.util import as_local
+from homeassistant.util.dt import as_local
 from pyadtpulse.alarm_panel import (
     ADT_ALARM_ARMING,
     ADT_ALARM_AWAY,
@@ -52,13 +46,13 @@ from .utils import (
 LOG = getLogger(__name__)
 
 ALARM_MAP = {
-    ADT_ALARM_ARMING: STATE_ALARM_ARMING,
-    ADT_ALARM_AWAY: STATE_ALARM_ARMED_AWAY,
-    ADT_ALARM_DISARMING: STATE_ALARM_DISARMING,
-    ADT_ALARM_HOME: STATE_ALARM_ARMED_HOME,
-    ADT_ALARM_OFF: STATE_ALARM_DISARMED,
+    ADT_ALARM_ARMING: AlarmControlPanelState.ARMING,
+    ADT_ALARM_AWAY: AlarmControlPanelState.ARMED_AWAY,
+    ADT_ALARM_DISARMING: AlarmControlPanelState.DISARMING,
+    ADT_ALARM_HOME: AlarmControlPanelState.ARMED_HOME,
+    ADT_ALARM_OFF: AlarmControlPanelState.DISARMED,
     ADT_ALARM_UNKNOWN: STATE_UNAVAILABLE,
-    ADT_ALARM_NIGHT: STATE_ALARM_ARMED_NIGHT,
+    ADT_ALARM_NIGHT: AlarmControlPanelState.ARMED_NIGHT,
 }
 
 
@@ -153,17 +147,17 @@ class ADTPulseAlarm(ADTPulseEntity, alarm.AlarmControlPanelEntity):
     ) -> None:
         result = True
         LOG.debug("%s: Setting Alarm to %s", ADTPULSE_DOMAIN, action)
-        if action != STATE_ALARM_DISARMED:
+        if action != AlarmControlPanelState.DISARMED:
             await self._check_if_system_armable(action)
         if self.state == action:
             LOG.warning("Attempting to set alarm to same state, ignoring")
             return
         if not self._gateway.is_online:
             self._assumed_state = action
-        elif action == STATE_ALARM_DISARMED:
-            self._assumed_state = STATE_ALARM_DISARMING
+        elif action == AlarmControlPanelState.DISARMED:
+            self._assumed_state = AlarmControlPanelState.DISARMING
         else:
-            self._assumed_state = STATE_ALARM_ARMING
+            self._assumed_state = AlarmControlPanelState.ARMING
         self.async_write_ha_state()
         result = await arm_disarm_func
         if not result:
@@ -176,15 +170,14 @@ class ADTPulseAlarm(ADTPulseEntity, alarm.AlarmControlPanelEntity):
     async def async_alarm_disarm(self, code: str | None = None) -> None:
         """Send disarm command."""
         await self._perform_alarm_action(
-            self._site.async_disarm(), STATE_ALARM_DISARMED
+            self._site.async_disarm(), AlarmControlPanelState.DISARMED
         )
 
     async def _check_if_system_armable(self, new_state: str) -> None:
         """Checks if we can arm the system, raises exceptions if not."""
-        if self.state != STATE_ALARM_DISARMED:
+        if self.state != AlarmControlPanelState.DISARMED:
             raise HomeAssistantError(
-                f"Cannot set alarm to {new_state} "
-                f"because currently set to {self.state}"
+                f"Cannot set alarm to {new_state} because currently set to {self.state}"
             )
         if not new_state == FORCE_ARM and not system_can_be_armed(self._site):
             raise HomeAssistantError(ARM_ERROR_MESSAGE)
@@ -192,13 +185,13 @@ class ADTPulseAlarm(ADTPulseEntity, alarm.AlarmControlPanelEntity):
     async def async_alarm_arm_home(self, code: str | None = None) -> None:
         """Send arm home command."""
         await self._perform_alarm_action(
-            self._site.async_arm_home(), STATE_ALARM_ARMED_HOME
+            self._site.async_arm_home(), AlarmControlPanelState.ARMED_HOME
         )
 
     async def async_alarm_arm_away(self, code: str | None = None) -> None:
         """Send arm away command."""
         await self._perform_alarm_action(
-            self._site.async_arm_away(), STATE_ALARM_ARMED_AWAY
+            self._site.async_arm_away(), AlarmControlPanelState.ARMED_AWAY
         )
 
     # Pulse can arm away or home with bypass
@@ -211,7 +204,7 @@ class ADTPulseAlarm(ADTPulseEntity, alarm.AlarmControlPanelEntity):
     async def async_alarm_arm_night(self) -> None:
         """Send arm night command."""
         await self._perform_alarm_action(
-            self._site.async_arm_night(), STATE_ALARM_ARMED_NIGHT
+            self._site.async_arm_night(), AlarmControlPanelState.ARMED_NIGHT
         )
 
     async def async_alarm_arm_force_stay(self) -> None:
@@ -220,7 +213,7 @@ class ADTPulseAlarm(ADTPulseEntity, alarm.AlarmControlPanelEntity):
         This type of arming isn't implemented in HA, but we put it in anyway for
         use as a service call."""
         await self._perform_alarm_action(
-            self._site.async_arm_home(force_arm=True), STATE_ALARM_ARMED_HOME
+            self._site.async_arm_home(force_arm=True), AlarmControlPanelState.ARMED_HOME
         )
 
     @property

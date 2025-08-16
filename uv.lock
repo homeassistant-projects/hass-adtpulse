@@ -761,7 +761,7 @@ wheels = [
 
 [[package]]
 name = "hass-adtpulse"
-version = "0.4.8"
+version = "0.5.0"
 source = { virtual = "." }
 dependencies = [
     { name = "homeassistant" },
@@ -771,7 +771,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "homeassistant", specifier = "==2025.8.0" },
+    { name = "homeassistant", specifier = ">=2025.8.0" },
     { name = "pre-commit", specifier = ">=4.2.0" },
     { name = "pyadtpulse", specifier = ">=1.2.11" },
 ]

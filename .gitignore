@@ -1,6 +1,6 @@
 .venv
-.ruff_cache/
-.vscode/*
-!.vscode/settings.json
+.ruff_cache
+.vscode
+
 
 

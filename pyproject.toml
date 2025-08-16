@@ -10,7 +10,11 @@ version = "0.5.1"
 dependencies = ["homeassistant>=2025.8.0", "pyadtpulse>=1.2.11"]
 
 [dependency-groups]
-dev = ["pre-commit>=4.3.0", "ruff>=0.12.9"]
+dev = [
+    "commitizen>=4.8.3",
+    "pre-commit>=4.3.0",
+    "ruff>=0.12.9",
+]
 
 [tool.uv]
 required-version = ">=0.8.0"
@@ -57,3 +61,11 @@ section-order = [
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_scheme = "pep440"
+version_provider = "uv"
+update_changelog_on_bump = true
+major_version_zero = true

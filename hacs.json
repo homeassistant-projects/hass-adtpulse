@@ -1,6 +1,9 @@
 {
     "name": "ADT Pulse",
-    "country": ["US", "CA"],
-    "homeassistant": "2025.7.1",
+    "country": [
+        "US",
+        "CA"
+    ],
+    "homeassistant": "2025.8.1",
     "render_readme": true
 }

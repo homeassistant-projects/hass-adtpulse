@@ -1,3 +1,16 @@
+## 0.5.0 (2025-08-14)
+
+* Repo cleanup by @EVWorth in #60
+* Resolve setup bugfix and added support for HA 2025.8.0 @EVWorth in #61
+
+## 0.4.8 (2025-07-13)
+
+* updated to the latest HACS validation and hassfest
+
+## 0.4.7 (2025-07-12)
+
+* bump pyadtpulse to 1.2.11 (requires HA 2025.7.1 currently)
+
 ## 0.4.6 (2024-04-21)
 
 * add arm night

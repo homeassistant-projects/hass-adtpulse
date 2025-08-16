@@ -5,27 +5,22 @@ See https://github.com/homeassistant-projects/hass-adtpulse
 
 from __future__ import annotations
 
-from logging import getLogger
-from asyncio import gather
 from typing import Any
+from asyncio import gather
+from logging import getLogger
 
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (
-    CONF_DEVICE_ID,
-    CONF_HOST,
-    CONF_PASSWORD,
-    CONF_SCAN_INTERVAL,
-    CONF_USERNAME,
-)
-from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
-from homeassistant.data_entry_flow import FlowResult
-from homeassistant.helpers.config_validation import config_entry_only_config_schema
-from homeassistant.helpers.typing import ConfigType
 from pyadtpulse.const import (
-    ADT_DEFAULT_KEEPALIVE_INTERVAL,
     ADT_DEFAULT_POLL_INTERVAL,
     ADT_DEFAULT_RELOGIN_INTERVAL,
+    ADT_DEFAULT_KEEPALIVE_INTERVAL,
+)
+from homeassistant.core import HomeAssistant
+from homeassistant.const import (
+    CONF_HOST,
+    CONF_PASSWORD,
+    CONF_USERNAME,
+    CONF_DEVICE_ID,
+    CONF_SCAN_INTERVAL,
 )
 from pyadtpulse.exceptions import (
     PulseAccountLockedError,
@@ -33,14 +28,19 @@ from pyadtpulse.exceptions import (
     PulseGatewayOfflineError,
     PulseServiceTemporarilyUnavailableError,
 )
+from homeassistant.exceptions import ConfigEntryNotReady, ConfigEntryAuthFailed
 from pyadtpulse.pyadtpulse_async import PyADTPulseAsync
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.helpers.typing import ConfigType
+from homeassistant.data_entry_flow import FlowResult
+from homeassistant.helpers.config_validation import config_entry_only_config_schema
 
 from .const import (
+    CONF_HOSTNAME,
     ADTPULSE_DOMAIN,
     CONF_FINGERPRINT,
-    CONF_HOSTNAME,
-    CONF_KEEPALIVE_INTERVAL,
     CONF_RELOGIN_INTERVAL,
+    CONF_KEEPALIVE_INTERVAL,
 )
 from .coordinator import ADTPulseDataUpdateCoordinator
 

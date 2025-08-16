@@ -1,14 +1,59 @@
 [project]
+authors = [{ name = "evworth" }, { name = "rsnodgrass" }]
 name = "hass-adtpulse"
-version = "0.5.0"
+
 description = "Home Assistant integration for ADT Pulse"
 readme = "README.md"
 requires-python = "==3.13.2"
-dependencies = [
-    "homeassistant>=2025.8.0",
-    "pre-commit>=4.2.0",
-    "pyadtpulse>=1.2.11",
-]
+version = "0.5.1"
+
+dependencies = ["homeassistant>=2025.8.0", "pyadtpulse>=1.2.11"]
 
 [dependency-groups]
-dev = []
+dev = ["pre-commit>=4.3.0", "ruff>=0.12.9"]
+
+[tool.uv]
+required-version = ">=0.8.0"
+
+[tool.ruff]
+line-length = 88         # Matches black
+show-fixes = true
+target-version = "py313"
+
+[tool.ruff.format]
+docstring-code-format = true
+docstring-code-line-length = "dynamic"
+line-ending = "auto"
+
+[tool.ruff.lint]
+ignore = [
+    "D105",    #missing-docstring-in-init
+    "PLR2004", #Magic Values
+    "D203",    #no-blank-line-before-class
+    "D212",    #multi-line-summary-first-line
+]
+select = [
+    "I",   # isort
+    "F",   # plake8-bugbear
+    "E",   # pycoyflakes
+    "W",
+    "D",   # pydocstyle
+    "PL",  # pylint
+    "RUF", # ruff
+    "UP",  # pyupgrade
+]
+[tool.ruff.lint.pylint]
+max-args = 10
+
+[tool.ruff.lint.isort]
+length-sort = true
+section-order = [
+    "future",
+    "standard-library",
+    "third-party",
+    "first-party",
+    "local-folder",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"

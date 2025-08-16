@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers import entity_registry as er
-from homeassistant.util import slugify
-from pyadtpulse.const import STATE_OK, STATE_ONLINE
 from pyadtpulse.site import ADTPulseSite
+from pyadtpulse.const import STATE_OK, STATE_ONLINE
 from pyadtpulse.zones import ADTPulseZoneData
+from homeassistant.core import HomeAssistant
+from homeassistant.util import slugify
+from homeassistant.helpers import entity_registry as er
 
 from .const import ADTPULSE_DOMAIN
 

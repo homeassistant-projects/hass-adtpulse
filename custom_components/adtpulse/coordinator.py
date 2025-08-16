@@ -2,20 +2,21 @@
 
 from __future__ import annotations
 
+from typing import Any
+from asyncio import Task, CancelledError
 from logging import getLogger
-from asyncio import CancelledError, Task
-from typing import Any, Callable
+from collections.abc import Callable
 
-from homeassistant.core import HomeAssistant, callback, CALLBACK_TYPE
-from homeassistant.exceptions import ConfigEntryNotReady
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
-from homeassistant.util.dt import as_local, utc_from_timestamp, utcnow
+from homeassistant.core import CALLBACK_TYPE, HomeAssistant, callback
+from homeassistant.util.dt import utcnow, as_local, utc_from_timestamp
 from pyadtpulse.exceptions import (
-    PulseExceptionWithBackoff,
-    PulseExceptionWithRetry,
     PulseLoginException,
+    PulseExceptionWithRetry,
+    PulseExceptionWithBackoff,
 )
+from homeassistant.exceptions import ConfigEntryNotReady
 from pyadtpulse.pyadtpulse_async import PyADTPulseAsync
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from .const import ADTPULSE_DOMAIN
 
@@ -36,7 +37,8 @@ class ADTPulseDataUpdateCoordinator(DataUpdateCoordinator):
 
         Args:
             hass (HomeAssistant): hass object
-            pulse_site (ADTPulseSite): ADT Pulse site
+            pulse_service (PyADTPulseAsync): ADT Pulse API service object used to
+                fetch updates and manage session state.
         """
         LOG.debug("%s: creating update coordinator", ADTPULSE_DOMAIN)
         self._adt_pulse = pulse_service
@@ -64,7 +66,6 @@ class ADTPulseDataUpdateCoordinator(DataUpdateCoordinator):
     @callback
     def async_update_listeners(self) -> None:
         """Update listeners based update returned data."""
-
         start_time = utcnow()
         if not self.data:
             super().async_update_listeners()
@@ -140,7 +141,7 @@ class ADTPulseDataUpdateCoordinator(DataUpdateCoordinator):
             except PulseExceptionWithBackoff as ex:
                 update_exception = ex
                 LOG.debug(
-                    "%s: coordinator received backoff exception, backing off for %s seconds",
+                    "%s: coordinator received backoff exception, backing off for %s seconds",  # noqa: E501
                     ADTPULSE_DOMAIN,
                     ex.backoff.get_current_backoff_interval(),
                 )

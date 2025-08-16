@@ -4,44 +4,43 @@ from __future__ import annotations
 
 from logging import getLogger
 from datetime import datetime
-from typing import Coroutine
+from collections.abc import Coroutine
 
 import homeassistant.components.alarm_control_panel as alarm
-from homeassistant.components.alarm_control_panel.const import (
-    AlarmControlPanelEntityFeature,
-)
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.components.alarm_control_panel.const import AlarmControlPanelState
-
-from homeassistant.const import STATE_UNAVAILABLE
+from pyadtpulse.site import ADTPulseSite
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.const import STATE_UNAVAILABLE
+from homeassistant.util.dt import as_local
+from pyadtpulse.alarm_panel import (
+    ADT_ALARM_OFF,
+    ADT_ALARM_AWAY,
+    ADT_ALARM_HOME,
+    ADT_ALARM_NIGHT,
+    ADT_ALARM_ARMING,
+    ADT_ALARM_UNKNOWN,
+    ADT_ALARM_DISARMING,
+)
 from homeassistant.exceptions import HomeAssistantError
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import (
     AddEntitiesCallback,
     async_get_current_platform,
 )
-from homeassistant.util.dt import as_local
-from pyadtpulse.alarm_panel import (
-    ADT_ALARM_ARMING,
-    ADT_ALARM_AWAY,
-    ADT_ALARM_DISARMING,
-    ADT_ALARM_HOME,
-    ADT_ALARM_OFF,
-    ADT_ALARM_UNKNOWN,
-    ADT_ALARM_NIGHT,
+from homeassistant.components.alarm_control_panel.const import (
+    AlarmControlPanelState,
+    AlarmControlPanelEntityFeature,
 )
-from pyadtpulse.site import ADTPulseSite
 
-from .base_entity import ADTPulseEntity
 from .const import ADTPULSE_DOMAIN
-from .coordinator import ADTPulseDataUpdateCoordinator, ALARM_CONTEXT
 from .utils import (
     get_alarm_unique_id,
-    get_gateway_unique_id,
     migrate_entity_name,
     system_can_be_armed,
+    get_gateway_unique_id,
 )
+from .base_entity import ADTPulseEntity
+from .coordinator import ALARM_CONTEXT, ADTPulseDataUpdateCoordinator
 
 LOG = getLogger(__name__)
 
@@ -116,6 +115,7 @@ class ADTPulseAlarm(ADTPulseEntity, alarm.AlarmControlPanelEntity):
 
     @property
     def assumed_state(self) -> bool:
+        """Return if the alarm is in an assumed state."""
         return self._assumed_state is None
 
     @property
@@ -133,7 +133,8 @@ class ADTPulseAlarm(ADTPulseEntity, alarm.AlarmControlPanelEntity):
         """Return device info.
 
         We set the identifiers to the site id since it is unique across all sites
-        and the zones can be identified by site id and zone name"""
+        and the zones can be identified by site id and zone name
+        """
         return DeviceInfo(
             identifiers={(ADTPULSE_DOMAIN, self._site.id)},
             manufacturer=self._alarm.manufacturer,
@@ -211,7 +212,8 @@ class ADTPulseAlarm(ADTPulseEntity, alarm.AlarmControlPanelEntity):
         """Send force arm stay command.
 
         This type of arming isn't implemented in HA, but we put it in anyway for
-        use as a service call."""
+        use as a service call.
+        """
         await self._perform_alarm_action(
             self._site.async_arm_home(force_arm=True), AlarmControlPanelState.ARMED_HOME
         )

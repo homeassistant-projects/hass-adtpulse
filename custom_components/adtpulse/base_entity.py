@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
+from typing import Any
 from logging import getLogger
-from typing import Any, Mapping
+from collections.abc import Mapping
 
 from homeassistant.core import callback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from pyadtpulse.pyadtpulse_async import PyADTPulseAsync
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import ADTPULSE_DATA_ATTRIBUTION
 from .coordinator import ADTPulseDataUpdateCoordinator
@@ -39,7 +40,8 @@ class ADTPulseEntity(CoordinatorEntity[ADTPulseDataUpdateCoordinator]):
     def name(self) -> str | None:
         """Return the display name for this sensor.
 
-        Should generally be none since using has_entity_name."""
+        Should generally be none since using has_entity_name.
+        """
         return None
 
     @property

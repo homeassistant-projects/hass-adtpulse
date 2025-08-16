@@ -2,47 +2,47 @@
 
 from __future__ import annotations
 
-from logging import getLogger
 from typing import Any
+from logging import getLogger
 
-import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
-from homeassistant.config_entries import (
-    CONN_CLASS_CLOUD_PUSH,
-    ConfigEntry,
-    ConfigFlow,
-    OptionsFlowWithConfigEntry,
-)
-from homeassistant.exceptions import ConfigEntryNotReady
-from homeassistant.const import CONF_PASSWORD, CONF_SCAN_INTERVAL, CONF_USERNAME
-from homeassistant.core import callback
-from homeassistant.data_entry_flow import FlowResult
+import homeassistant.helpers.config_validation as cv
+from pyadtpulse.site import ADTPulseSite
 from pyadtpulse.const import (
-    ADT_DEFAULT_KEEPALIVE_INTERVAL,
-    ADT_DEFAULT_POLL_INTERVAL,
-    ADT_DEFAULT_RELOGIN_INTERVAL,
-    ADT_MAX_KEEPALIVE_INTERVAL,
-    ADT_MIN_RELOGIN_INTERVAL,
     API_HOST_CA,
     DEFAULT_API_HOST,
+    ADT_MIN_RELOGIN_INTERVAL,
+    ADT_DEFAULT_POLL_INTERVAL,
+    ADT_MAX_KEEPALIVE_INTERVAL,
+    ADT_DEFAULT_RELOGIN_INTERVAL,
+    ADT_DEFAULT_KEEPALIVE_INTERVAL,
 )
+from homeassistant.core import callback
+from homeassistant.const import CONF_PASSWORD, CONF_USERNAME, CONF_SCAN_INTERVAL
 from pyadtpulse.exceptions import (
+    PulseConnectionError,
+    PulseMFARequiredError,
     PulseAccountLockedError,
     PulseAuthenticationError,
-    PulseConnectionError,
     PulseGatewayOfflineError,
-    PulseMFARequiredError,
     PulseServiceTemporarilyUnavailableError,
 )
+from homeassistant.exceptions import ConfigEntryNotReady
 from pyadtpulse.pyadtpulse_async import PyADTPulseAsync
-from pyadtpulse.site import ADTPulseSite
+from homeassistant.config_entries import (
+    CONN_CLASS_CLOUD_PUSH,
+    ConfigFlow,
+    ConfigEntry,
+    OptionsFlowWithConfigEntry,
+)
+from homeassistant.data_entry_flow import FlowResult
 
 from .const import (
+    CONF_HOSTNAME,
     ADTPULSE_DOMAIN,
     CONF_FINGERPRINT,
-    CONF_HOSTNAME,
-    CONF_KEEPALIVE_INTERVAL,
     CONF_RELOGIN_INTERVAL,
+    CONF_KEEPALIVE_INTERVAL,
 )
 
 LOG = getLogger(__name__)
@@ -243,7 +243,6 @@ class PulseOptionsFlowHandler(OptionsFlowWithConfigEntry):
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         """Manage the options."""
-
         result: dict[str, Any] | None = None
         if user_input is not None:
             result = self._validate_options(user_input)

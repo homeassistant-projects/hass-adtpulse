@@ -8,35 +8,36 @@ exposes them into HA.
 
 from __future__ import annotations
 
+from typing import Any
 from logging import getLogger
 from datetime import datetime
-from typing import Any, Mapping
+from collections.abc import Mapping
 
-from homeassistant.components.binary_sensor import (
-    BinarySensorDeviceClass,
-    BinarySensorEntity,
-)
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.device_registry import DeviceInfo, CONNECTION_NETWORK_MAC
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.util.dt import as_local
 from pyadtpulse.site import ADTPulseSite
 from pyadtpulse.zones import ADTPulseZoneData
+from homeassistant.core import HomeAssistant, callback
+from homeassistant.util.dt import as_local
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.helpers.device_registry import CONNECTION_NETWORK_MAC, DeviceInfo
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.components.binary_sensor import (
+    BinarySensorEntity,
+    BinarySensorDeviceClass,
+)
 
-from .base_entity import ADTPulseEntity
 from .const import ADTPULSE_DOMAIN
+from .utils import (
+    zone_is_open,
+    zone_is_in_trouble,
+    get_alarm_unique_id,
+    migrate_entity_name,
+    get_gateway_unique_id,
+)
+from .base_entity import ADTPulseEntity
 from .coordinator import (
-    ADTPulseDataUpdateCoordinator,
     ZONE_CONTEXT_PREFIX,
     ZONE_TROUBLE_PREFIX,
-)
-from .utils import (
-    get_alarm_unique_id,
-    get_gateway_unique_id,
-    migrate_entity_name,
-    zone_is_in_trouble,
-    zone_is_open,
+    ADTPulseDataUpdateCoordinator,
 )
 
 LOG = getLogger(__name__)
@@ -143,7 +144,16 @@ class ADTPulseZoneSensor(ADTPulseEntity, BinarySensorEntity):
         zone_id: int,
         trouble_indicator: bool,
     ):
-        """Initialize the binary_sensor."""
+        """Initialize the ADT Pulse zone sensor.
+
+        Args:
+            coordinator (ADTPulseDataUpdateCoordinator): HASS data update coordinator.
+            site (ADTPulseSite): ADT Pulse site object containing zones
+                and gateway info.
+            zone_id (int): Numeric identifier of the zone to represent.
+            trouble_indicator (bool): If True, create a trouble-indicator sensor for the
+                zone instead of the normal zone sensor.
+        """
         sensor_type = ""
         if trouble_indicator:
             sensor_type = "trouble"
@@ -248,7 +258,8 @@ class ADTPulseGatewaySensor(ADTPulseEntity, BinarySensorEntity):
         Args:
             coordinator (ADTPulseDataUpdateCoordinator):
                 HASS data update coordinator
-            service (PyADTPulse): API Pulse connection object
+            site (ADTPulseSite): ADT Pulse site object containing zones
+                and gateway info.
         """
         LOG.debug(
             "%s: adding gateway status sensor for site %s", ADTPULSE_DOMAIN, site.name
@@ -278,7 +289,9 @@ class ADTPulseGatewaySensor(ADTPulseEntity, BinarySensorEntity):
             "device_lan_ip_address": str(self._gateway.device_lan_ip_address),
             "router_lan_ip_address": str(self._gateway.router_lan_ip_address),
             "router_wan_ip_address": str(self._gateway.router_wan_ip_address),
-            "current_poll_interval": self._gateway.backoff.get_current_backoff_interval(),
+            "current_poll_interval": (
+                self._gateway.backoff.get_current_backoff_interval()
+            ),
             "initial_poll_interval": self._gateway.backoff.initial_backoff_interval,
             "next_update": as_local(datetime.fromtimestamp(self._gateway.next_update)),
             "last_update": as_local(datetime.fromtimestamp(self._gateway.last_update)),
@@ -286,6 +299,11 @@ class ADTPulseGatewaySensor(ADTPulseEntity, BinarySensorEntity):
 
     @property
     def device_info(self) -> DeviceInfo:
+        """Return device info for the gateway device.
+
+        The returned DeviceInfo populates the device registry with identifiers,
+        connection data and metadata about the ADT Pulse gateway.
+        """
         mac_addresses = set()
         for i in ("broadband_lan_mac", "device_lan_mac"):
             if getattr(self._gateway, i) is not None:
